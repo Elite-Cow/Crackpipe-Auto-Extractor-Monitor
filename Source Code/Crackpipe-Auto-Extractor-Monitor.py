@@ -9,6 +9,9 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, scrolledtext
 import sys
+import pystray
+from pystray import MenuItem as item
+from PIL import Image, ImageTk
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -30,6 +33,9 @@ def install_dependencies():
     install_package('tkinter')
     install_package('watchdog')
     install_package('py7zr')
+    install_package('pystray')
+    install_package('PIL')
+    
 
 def extract_compressed_file(file_path, destination_dir, log):
     max_retries = 360
@@ -43,19 +49,19 @@ def extract_compressed_file(file_path, destination_dir, log):
                     root_folder = os.path.basename(os.path.dirname(file_path))
                     extract_dir = os.path.join(destination_dir, root_folder)
                     zip_ref.extractall(extract_dir)
-                log.insert(tk.END, f"Extracted {root_folder} to {extract_dir}")
+                log.insert(tk.END, f"Extracted {root_folder}")
             elif tarfile.is_tarfile(file_path):
                 with tarfile.open(file_path, 'r') as tar_ref:
                     root_folder = os.path.basename(os.path.dirname(file_path))
                     extract_dir = os.path.join(destination_dir, root_folder)
                     tar_ref.extractall(extract_dir)
-                log.insert(tk.END, f"Extracted {root_folder} to {extract_dir}\n")
+                log.insert(tk.END, f"Extracted {root_folder}\n")
             elif file_path.endswith('.7z'):
                 with py7zr.SevenZipFile(file_path, mode='r') as seven_zip_ref:
                     root_folder = os.path.basename(os.path.dirname(file_path))
                     extract_dir = os.path.join(destination_dir, root_folder)
                     seven_zip_ref.extractall(path=extract_dir)
-                log.insert(tk.END, f"Extracted {root_folder} to {extract_dir}\n")
+                log.insert(tk.END, f"Extracted {root_folder}\n")
 
             # Extraction successful, break out of the loop
             break
@@ -115,6 +121,24 @@ def start_extraction():
     observer.schedule(event_handler, path=source_dir, recursive=True)
     observer.start()
 
+# Define a function for quit the window
+def quit_window(icon, item):
+   icon.stop()
+   window.destroy()
+
+# Define a function to show the window again
+def show_window(icon, item):
+   icon.stop()
+   window.after(0,window.deiconify())
+
+# Hide the window and show on the system taskbar
+def hide_window():
+   window.withdraw()
+   image=Image.open(sys._MEIPASS + '\icon.ico')
+   menu=(item('Quit', quit_window), item('Show', show_window))
+   icon=pystray.Icon("name", image, "Crackpipe Auto Extractor", menu)
+   icon.run()
+
 # Install dependencies
 install_dependencies()
 
@@ -122,6 +146,7 @@ install_dependencies()
 window = tk.Tk()
 window.title("Crackpipe Auto Extractor")
 window.geometry("600x400")
+window.resizable(width=False, height=False)
 # Set the application icon
 #window.wm_attributes('-toolwindow', 'True')
 window.iconbitmap(sys._MEIPASS + '\icon.ico')
@@ -132,7 +157,7 @@ source_label.pack()
 source_entry = tk.Entry(window, width=60)
 source_entry.pack(side=tk.TOP)
 source_button = tk.Button(window, text="Browse", command=select_source_dir)
-source_button.pack(side=tk.TOP)
+source_button.pack(side=tk.TOP, pady=3)
 
 # Destination Directory
 destination_label = tk.Label(window, text="Crackpipe Installations Directory:")
@@ -140,7 +165,7 @@ destination_label.pack()
 destination_entry = tk.Entry(window, width=60)
 destination_entry.pack(side=tk.TOP)
 destination_button = tk.Button(window, text="Browse", command=select_destination_dir)
-destination_button.pack(side=tk.TOP)
+destination_button.pack(side=tk.TOP, pady=3)
 
 # Output Log
 log_label = tk.Label(window, text="Process Log:")
@@ -153,4 +178,5 @@ start_button = tk.Button(window, text="Start Monitoring", command=start_extracti
 start_button.pack(pady=15)
 
 # Run the GUI main loop
+window.protocol('WM_DELETE_WINDOW', hide_window)
 window.mainloop()
