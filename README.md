@@ -22,5 +22,11 @@ Start monitoring > Download games via [Crackpipe](https://crackpipe.de/) and aut
 Once monitoring has started. You can allow the program to passively run. Whenever you download games via [Crackpipe](https://crackpipe.de/), they will be auto extacted to the installations folder and will display in the [Crackpipe](https://crackpipe.de/) client.
 
 ##
+## Updates
+v1.1 now closes to system tray!
+* Pressing "X" (close) in the program minimizes to system tray for a more passive way to run!
+* Right-Click > Quite on system tray icon to exit program.
+
+##
 *Known Bugs*
 * Processing log duplicates log entries.
