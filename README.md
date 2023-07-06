@@ -28,5 +28,5 @@ v1.1 now closes to system tray!
 * Right-Click > Quite on system tray icon to exit program.
 
 ##
-*Known Bugs*
+## Known Bugs
 * Processing log duplicates log entries.
