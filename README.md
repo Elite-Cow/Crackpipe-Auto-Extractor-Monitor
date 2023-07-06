@@ -1,8 +1,11 @@
 # Crackpipe Auto Extractor Monitor
-This simple program monitors the Crackpipe downloads directory and automatically extracts the data into the associated installations folder.
-Start monitoring > Downloads games via Crackpipe and automatically have your games extracted to the installation folder so they display within the Crackpipe client without manually "installing"/extracting.
+This simple program monitors the [Crackpipe](https://crackpipe.de/) downloads directory and automatically extracts the data into the associated installations folder.
 
-[Crackpipe](https://crackpipe.de/) - the decentralized gaming platform for 'alternatively obtained' games
+Check out [Crackpipe](https://crackpipe.de/) - the decentralized gaming platform for 'alternatively obtained' games
+
+##
+Start monitoring > Download games via Crackpipe and automatically have your games extracted to the installation folder so they display within the Crackpipe client without manually "installing"/extracting.
+
 
 1. Select the Crackpipe > Downloads folder
 2. Select the Crackpipe > Installations folder
@@ -16,7 +19,8 @@ Start monitoring > Downloads games via Crackpipe and automatically have your gam
 
 </center>
 
-Once monitoring has started. You can allow the program to passively run. Whenever you download games via Crackpipe, they will be auto extacted to the installations folder and will display in the Crackpipe client.
+Once monitoring has started. You can allow the program to passively run. Whenever you download games via [Crackpipe](https://crackpipe.de/), they will be auto extacted to the installations folder and will display in the [Crackpipe](https://crackpipe.de/) client.
 
+##
 *Known Bugs*
 * Processing log duplicates log entries.
