@@ -7,3 +7,6 @@ Start monitoring > Downloads games via Crackpipe and automatically have your gam
 3. Click "Start Monitoring"
 
 Once monitoring has started. You can allow the program to passively run. Whenever you download games via Crackpipe, they will be auto extacted to the installations folder and will display in the Crackpipe client.
+
+*Known Bugs*
+* Processing log duplicates log entries.
