@@ -4,7 +4,7 @@ This simple program monitors the [Crackpipe](https://crackpipe.de/) downloads di
 Check out [Crackpipe](https://crackpipe.de/) - the decentralized gaming platform for 'alternatively obtained' games
 
 ##
-Start monitoring > Download games via Crackpipe and automatically have your games extracted to the installation folder so they display within the Crackpipe client without manually "installing"/extracting.
+Start monitoring > Download games via [Crackpipe](https://crackpipe.de/) and automatically have your games extracted to the installation folder so they display within the Crackpipe client without manually "installing"/extracting.
 
 
 1. Select the Crackpipe > Downloads folder
