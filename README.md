@@ -1,4 +1,4 @@
-# Crackpipe-Auto-Extractor-Monitor
+# Crackpipe Auto Extractor Monitor
 This simple program monitors the Crackpipe downloads directory and automatically extracts the data into the associated installations folder.
 Start monitoring > Downloads games via Crackpipe and automatically have your games extracted to the installation folder so they display within the Crackpipe client without manually "installing"/extracting.
 
