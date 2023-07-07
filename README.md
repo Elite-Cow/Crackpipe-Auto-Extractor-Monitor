@@ -1,4 +1,4 @@
-# Crackpipe Auto Extractor Monitor
+# Crackpipe Auto Extractor Monitor - A Crackpipe Assistant!
 This simple program monitors the [Crackpipe](https://crackpipe.de/) downloads directory and automatically extracts the data into the associated installations folder.
 
 Check out [Crackpipe](https://crackpipe.de/) - the decentralized gaming platform for 'alternatively obtained' games
@@ -10,6 +10,7 @@ Start monitoring > Download games via [Crackpipe](https://crackpipe.de/) and aut
 1. Select the Crackpipe > Downloads folder
 2. Select the Crackpipe > Installations folder
 3. Click "Start Monitoring"
+4. Closing the application will minimize it to the system tray
 
 <p align="center"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/QzER3AD.png">
@@ -19,7 +20,7 @@ Start monitoring > Download games via [Crackpipe](https://crackpipe.de/) and aut
 
 </center>
 
-Once monitoring has started. You can allow the program to passively run. Whenever you download games via [Crackpipe](https://crackpipe.de/), they will be auto extacted to the installations folder and will display in the [Crackpipe](https://crackpipe.de/) client.
+Once monitoring has started. You can allow the program to passively run. To minimize to the system tray, close the application using the "x". Whenever you download games via [Crackpipe](https://crackpipe.de/), they will be auto extacted to the installations folder and will display in the [Crackpipe](https://crackpipe.de/) client.
 
 ##
 ## Updates
