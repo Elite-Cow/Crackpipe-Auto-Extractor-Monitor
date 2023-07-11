@@ -26,7 +26,7 @@ Once monitoring has started. You can allow the program to passively run. To mini
 ## Updates
 v1.1 now closes to system tray!
 * Pressing "X" (close) in the program minimizes to system tray for a more passive way to run!
-* Right-Click > Quite on system tray icon to exit program.
+* Right-Click > Quit on system tray icon to exit program.
 
 ##
 ## Known Bugs
