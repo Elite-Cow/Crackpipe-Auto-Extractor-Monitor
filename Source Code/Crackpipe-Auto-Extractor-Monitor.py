@@ -2,16 +2,14 @@ import os
 import time
 import zipfile
 import tarfile
-import py7zr
 import importlib
 import subprocess
 import threading
-import tkinter as tk
-from tkinter import filedialog, scrolledtext
 import sys
-import pystray
-from pystray import MenuItem as item
-from PIL import Image, ImageTk
+import re
+import glob
+from mainwindow import Ui_window
+
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -30,11 +28,10 @@ def install_package(package_name):
         subprocess.check_call(['pip', 'install', package_name])
 
 def install_dependencies():
-    install_package('tkinter')
     install_package('watchdog')
     install_package('py7zr')
     install_package('pystray')
-    install_package('PIL')
+    install_package('PyQt5')
     
 
 def extract_compressed_file(file_path, destination_dir, log):
@@ -78,26 +75,28 @@ def extract_compressed_file(file_path, destination_dir, log):
     if retries >= max_retries:
         log.insert(tk.END, f"Extraction failed after {max_retries} retries. File may still be locked.\n")
 
-def select_source_dir():
-    source_dir = filedialog.askdirectory()
-    source_entry.delete(0, tk.END)
-    source_entry.insert(tk.END, source_dir)
-
-def select_destination_dir():
-    destination_dir = filedialog.askdirectory()
-    destination_entry.delete(0, tk.END)
-    destination_entry.insert(tk.END, destination_dir)
-
 def start_extraction():
-    source_dir = source_entry.get()
-    destination_dir = destination_entry.get()
+
+    rootpath = None
+    appdata = os.getenv('LOCALAPPDATA')
+    Filepath = (glob.glob(f'{appdata}\\Packages\\Phalcode.*\\LocalCache\\Roaming\\Crackpipe\\config\\user'))[0]
+
+    pattern = re.compile("RootPath", re.IGNORECASE)  # Compile a case-insensitive regex
+    with open (Filepath, 'rt') as config:    
+        for line in config:
+            if pattern.search(line) != None:      # If a match is found 
+                rootpath =line.split('RootPath=',1)[1].rstrip('\n')
+
+    source_dir = rootpath + "Crackpipe\\Downloads"
+    destination_dir = rootpath + "Crackpipe\\Installations"
+    # destination_dir = rootpath + "Crackpipe\\Downloads"
 
     if not source_dir or not destination_dir:
-        log.insert(tk.END, "Please select source and destination directories.\n")
+        ui.log.insertPlainText(f"Source and destination directories could not be found.\n")
         return
 
-    log.insert(tk.END, f"Monitoring source directory: {source_dir}\n")
-    log.insert(tk.END, f"Destination directory: {destination_dir}\n")
+    ui.log.insertPlainText(f"Monitoring source directory: {source_dir}\n")
+    ui.log.insertPlainText(f"Destination directory: {destination_dir}\n")
 
     from watchdog.observers import Observer
     from watchdog.events import FileSystemEventHandler
@@ -111,72 +110,47 @@ def start_extraction():
 
         def on_created(self, event):
             if not event.is_directory:
-                self.log.insert(tk.END, f"New file detected: {event.src_path}\n")
+                self.log.insertPlainText(f"New file detected: {event.src_path}\n")
                 thread = threading.Thread(target=extract_compressed_file,
                                           args=(event.src_path, self.destination_dir, self.log))
                 thread.start()
 
-    event_handler = FileHandler(source_dir, destination_dir, log)
+    event_handler = FileHandler(source_dir, destination_dir, ui.log)
     observer = Observer()
     observer.schedule(event_handler, path=source_dir, recursive=True)
     observer.start()
 
-# Define a function for quit the window
-def quit_window(icon, item):
-   icon.stop()
-   window.destroy()
-
-# Define a function to show the window again
-def show_window(icon, item):
-   icon.stop()
-   window.after(0,window.deiconify())
-
-# Hide the window and show on the system taskbar
-def hide_window():
-   window.withdraw()
-   image=Image.open(sys._MEIPASS + '\icon.ico')
-   menu=(item('Quit', quit_window), item('Show', show_window))
-   icon=pystray.Icon("name", image, "Crackpipe Auto Extractor", menu)
-   icon.run()
-
 # Install dependencies
 install_dependencies()
 
-# Create the main window
-window = tk.Tk()
-window.title("Crackpipe Auto Extractor")
-window.geometry("600x400")
-window.resizable(width=False, height=False)
-# Set the application icon
-#window.wm_attributes('-toolwindow', 'True')
-window.iconbitmap(sys._MEIPASS + '\icon.ico')
+#import installed dependecies
+import py7zr
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-# Source Directory
-source_label = tk.Label(window, text="Crackpipe Downloads Directory:")
-source_label.pack()
-source_entry = tk.Entry(window, width=60)
-source_entry.pack(side=tk.TOP)
-source_button = tk.Button(window, text="Browse", command=select_source_dir)
-source_button.pack(side=tk.TOP, pady=3)
+app = QtWidgets.QApplication(sys.argv)
+app.setQuitOnLastWindowClosed(False)
 
-# Destination Directory
-destination_label = tk.Label(window, text="Crackpipe Installations Directory:")
-destination_label.pack()
-destination_entry = tk.Entry(window, width=60)
-destination_entry.pack(side=tk.TOP)
-destination_button = tk.Button(window, text="Browse", command=select_destination_dir)
-destination_button.pack(side=tk.TOP, pady=3)
+MainWindow = QtWidgets.QMainWindow() 
+ui = Ui_window()
+ui.setupUi(MainWindow)
+# MainWindow.show()
 
-# Output Log
-log_label = tk.Label(window, text="Process Log:")
-log_label.pack()
-log = scrolledtext.ScrolledText(window, height=10, width=70)
-log.pack()
+icon= QtGui.QIcon('C:/users/dillo/downloads/icon.ico')
+tray = QtWidgets.QSystemTrayIcon()
+tray.setIcon(icon)
+tray.setVisible(True)
 
-# Start Extraction Button
-start_button = tk.Button(window, text="Start Monitoring", command=start_extraction, pady=15,)
-start_button.pack(pady=15)
+show = QtWidgets.QAction("Open Crackpipe Auto Extractor")
+show.triggered.connect(lambda: MainWindow.show())
+quit = QtWidgets.QAction("Quit")
+quit.triggered.connect(app.quit)
 
-# Run the GUI main loop
-window.protocol('WM_DELETE_WINDOW', hide_window)
-window.mainloop()
+menu = QtWidgets.QMenu()
+menu.addAction(show)
+menu.addAction(quit)
+
+tray.setContextMenu(menu)
+
+start_extraction()
+
+sys.exit(app.exec_())
